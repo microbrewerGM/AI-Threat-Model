@@ -54,7 +54,16 @@ A comprehensive threat and risk model for Generative AI and Large Language Model
 
 The **AI-Threat-Model** project provides a structured framework to assess and manage security risks associated with Generative AI and Large Language Models (LLMs). By leveraging advanced methodologies and comprehensive risk categories, this threat model aims to enhance the security posture of AI-driven applications, ensuring their safe and reliable operation across various industries.
 
+**Example of a GenAI/LLM system with Document RAG (credit: AWS):**
+![LLM RAG](image-llm-rag.png)
+
+**Example of a GenAI/LLM system with SQL RAG(credit: AWS):**
+![LLM RAG](image-llm-rag-sql.png)
+
 The threat model analysis is based on the [Threagile](https://github.com/threagile/threagile) framework.
+
+**Threat Model:**
+![Threat Model](data-flow-diagram.png)
 
 ## Features
 
