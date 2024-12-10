@@ -1,0 +1,1073 @@
+threagile_version: 1.0.0
+title: Customer Portal Threat Model
+date: 2024-12-01
+author:
+  name: Aaron Smith
+  homepage: phenomsec.com
+management_summary_comment: >
+  The Customer Portal application workload is designed to enhance business operations across
+  various industries by leveraging advanced technologies such as Generative AI, 
+  Large Language Models (LLMs), and neural networks. This application facilitates 
+  seamless interactions between users and business applications, enabling efficient 
+  data processing and decision-making. 
+
+  The architecture supports both internal and external users, ensuring secure access 
+  to business-critical data while maintaining compliance with industry standards. 
+  By integrating AI-driven insights into workflows, the application aims to optimize 
+  performance, reduce operational costs, and improve user experience. 
+
+  Key features include real-time data analysis, automated reporting, and personalized 
+  user interactions, all of which contribute to a robust and scalable solution that 
+  adapts to evolving business needs.
+business_criticality: critical # values: archive, operational, important, critical, mission-critical
+business_overview:
+  description: >
+    The Customer Portal application serves as a pivotal tool for businesses seeking to 
+    harness the power of AI to drive innovation and efficiency. By providing users 
+    with intuitive access to advanced analytics and insights, the application 
+    empowers teams to make informed decisions quickly. 
+
+    This workload is designed to support a variety of business functions, from 
+    customer service to strategic planning, ensuring that all stakeholders can 
+    leverage AI capabilities to enhance productivity and achieve organizational 
+    goals. The application is adaptable to different industries, making it a 
+    versatile solution for both internal operations and customer-facing services.
+  images:
+    - DALL-E_2024-12-02_09.38.14-CustomerPortal-BusinessOverview.webp: Customer Portal
+technical_overview:
+  description: >
+    The technical architecture of the Customer Portal application is built on a 
+    robust framework that integrates cutting-edge technologies, including 
+    Generative AI, LLMs, and neural networks. This infrastructure is designed 
+    to handle complex data flows and provide real-time processing capabilities, 
+    ensuring that users receive timely and relevant insights.
+
+    The application employs a microservices architecture, allowing for 
+    scalability and flexibility in deployment. Security measures are embedded 
+    throughout the system to protect sensitive business data, while APIs 
+    facilitate seamless integration with existing business applications. This 
+    technical foundation ensures that the Customer Portal application can evolve 
+    alongside technological advancements and business needs.
+  images:
+    - DALL-E_2024-12-02_09.38.14-CustomerPortal-TechnicalOverview.webp: Customer Portal
+questions: # simply use  as answer to signal unanswered
+  Some question without an answer?: 
+  Some question with an answer?: >
+    Some answer
+abuse_cases:
+  Some Abuse Case: >
+    Some Description
+security_requirements:
+  Some Security Requirement: Some Description
+tags_available:
+  # Tags can be used for anything, it's just a tag. Also risk rules can act based on tags if you like.
+  # Tags can be used for example to name the products used (which is more concrete than the technology types that only specify the type)
+  - aws
+  - aws:apigateway
+  - aws:dynamodb
+  - aws:ebs
+  - aws:ec2
+  - aws:iam
+  - aws:lambda
+  - aws:rds
+  - aws:s3
+  - aws:sqs
+  - aws:vpc
+  - azure
+  - docker
+  - gcp
+  - git
+  - kubernetes
+  - nexus
+  - ocp
+  - openshift
+  - tomcat
+  - some-tag
+  - some-other-tag
+  - human
+  - prompts
+  - conversation
+  - context
+  - kb-documents
+  - user
+  - training
+  - user-input
+  - authentication
+  - knowledge-base
+  - conversation-history
+  - context
+  - start
+  - kb-embeddings
+  - llm
+  - web
+  - 3rd-party-integration
+  - public
+data_assets:
+  User Input:
+    id: user-input-asset-id
+    description: Raw queries or commands from users.
+    usage: business # values: business, devops
+    tags:
+      - human
+    origin: User
+    owner: Customer
+    quantity: many # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: operational # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      User input can contain sensitive data that could be used to access the 
+      Customer Portal, therefore, it is strictly confidential in terms of confidentiality.
+      The integrity of the user input is mission-critical as the tampering with the 
+      user input would directly impact the use of the Customer Portal.
+  User ID:
+    id: user-id-asset-id
+    description: Unique identifier for a user.
+    usage: business # values: business, devops
+    tags:
+      - human
+    origin: User
+    owner: Customer
+    quantity: very-few # values: very-few, few, many, very-many
+    confidentiality: internal # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The user ID is used for authentication and authorization, therefore, it is internal.
+      The integrity of the user ID is mission-critical as the tampering with the 
+      user ID would directly impact the use of the Customer Portal.
+      The availability of the user ID is mission-critical as the user must authenticate.
+  User Password:
+    id: user-password-asset-id
+    description: Secure password for user authentication.
+    usage: business # values: business, devops
+    tags:
+      - human
+    origin: User
+    owner: Customer
+    quantity: very-few # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The user password is used for authentication and authorization, therefore, it is strictly confidential.
+      The integrity of the user password is mission-critical as the tampering with the 
+      user password would directly impact the use of the Customer Portal.
+      The availability of the user password is mission-critical as the user must authenticate.
+  Authentication Tokens:
+    id: authentication-tokens-asset-id
+    description: Secure credentials for user access. 
+    usage: business # values: business, devops
+    tags:
+      - authentication
+    origin: Authentication Service
+    owner: Customer
+    quantity: few # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The authentication tokens are used for authentication and authorization, therefore, they are strictly confidential.
+      The integrity of the authentication tokens is mission-critical as the tampering with the 
+      authentication tokens would directly impact the use of the Customer Portal.
+      The availability of the authentication tokens is mission-critical as the user must authenticate.
+  Knowledge Base Documents:
+    id: kb-documents-asset-id
+    description: Retrieved data from the knowledge base; post-processed document embeddings.
+    usage: business # values: business, devops
+    tags:
+      - knowledge-base
+    origin: Data Ingestion Service
+    owner: Business Data Steward
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: important # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The knowledge base documents contain sensitive data that could be used to 
+      access the Customer Portal, therefore, they are confidential.
+      The integrity of the knowledge base documents is critical as the tampering 
+      with the knowledge base documents would directly impact the use of the 
+      Customer Portal.
+      The availability of the knowledge base documents is important as the user 
+      must be able to retrieve the knowledge base documents, which greatly enhances
+      accuracy of the LLM responses.
+  Knowledge Base Embeddings:
+    id: kb-embeddings-asset-id
+    description: Machine-readable representations of documents.
+    usage: business # values: business, devops
+    tags:
+      - knowledge-base
+    origin: Data Ingestion Service
+    owner: Business Data Steward
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: important # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The knowledge base embeddings contain sensitive data that could be used to 
+      access the Customer Portal, therefore, they are confidential.
+      The integrity of the knowledge base embeddings is critical as the tampering 
+      with the knowledge base embeddings would directly impact the use of the 
+      Customer Portal.
+      The availability of the knowledge base embeddings is important as the user 
+      must be able to retrieve the knowledge base embeddings, which greatly enhances
+      accuracy of the LLM responses.
+  Prompt Store:
+    id: prompt-store-asset-id
+    description: Pre-defined instructions, templates, and user-specific prompts.
+    usage: business # values: business, devops
+    tags:
+      - prompts
+    origin: Prompt Storage
+    owner: Business AI Team
+    quantity: few # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The prompt store contains sensitive data that could be used to access the 
+      Customer Portal, therefore, it is confidential.
+      The integrity of the prompt store is critical as the tampering with the 
+      prompt store would directly impact the use of the Customer Portal.
+      The availability of the prompt store is critical as the system must be able 
+      to retrieve the prompt store, which greatly enhances accuracy of the LLM responses.
+  Conversation History:
+    id: conversation-history-asset-id
+    description: Past conversation records for context.
+    usage: business # values: business, devops
+    tags:
+      - conversation
+      - user
+    origin: Conversation Storage
+    owner: Technical Team
+    quantity: many # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: important # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The conversation history contains sensitive data that could be used to 
+      access the Customer Portal, therefore, it is strictly confidential.
+      The integrity of the conversation history is mission-critical as the tampering 
+      with the conversation history would directly impact the use of the Customer Portal.
+      The availability of the conversation history is important as the user must be 
+      able to retrieve the conversation history, which greatly enhances accuracy of 
+      the LLM responses.
+  Context:
+    id: context-asset-id
+    description: Supplementary data to enhance prompt accuracy.
+    usage: business # values: business, devops
+    tags:
+      - context
+    origin: External Services
+    owner: Business AI Team
+    quantity: many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: important # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The context contains sensitive data that could be used to access the 
+      Customer Portal, therefore, it is confidential.
+      The integrity of the context is critical as the tampering with the 
+      context would directly impact the use of the Customer Portal.
+      The availability of the context is important as the user must be able 
+      to retrieve the context, which greatly enhances accuracy of the LLM responses.
+  Prompts:
+    id: prompts-asset-id
+    description: Contextually enriched queries sent to the LLM.
+    usage: business # values: business, devops
+    tags:
+      - prompts
+      - user-input
+      - kb-documents
+      - conversation-history
+      - context
+    origin: Query Service
+    owner: Business AI Team
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The prompts contain sensitive data that could be used to access the 
+      Customer Portal, therefore, they are strictly confidential.
+      The integrity of the prompts is mission-critical as the tampering with the 
+      prompts would directly impact the use of the Customer Portal.
+      The availability of the prompts is mission-critical as the user must be able 
+      to retrieve the prompts, which greatly enhances accuracy of the LLM responses.
+  LLM Answers:
+    id: llm-answers-asset-id
+    description: Responses generated by the LLM.
+    usage: business # values: business, devops
+    tags:
+      - conversation
+    origin: LLM
+    owner: Business AI Team
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The LLM answers contain sensitive data that could be used to access the 
+      Customer Portal, therefore, they are strictly confidential.
+      The integrity of the LLM answers is mission-critical as the tampering with the 
+      LLM answers would directly impact the use of the Customer Portal.
+      The availability of the LLM answers is mission-critical as the user must be 
+      able to retrieve the LLM answers, which greatly enhances accuracy of the LLM responses.
+  KB Document References:
+    id: kb-document-references-asset-id
+    description: References to documents in the knowledge base.
+    usage: business # values: business, devops
+    tags:
+      - conversation
+      - kb-documents
+    origin: Knowledge Base
+    owner: Business AI Team
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: important # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The KB document references contain sensitive data that could be used to 
+      access the Customer Portal, therefore, they are confidential.
+      The integrity of the KB document references is mission-critical as the 
+      tampering with the KB document references would directly impact the use 
+      of the Customer Portal.
+      The availability of the KB document references is important as the user 
+      must be able to retrieve the KB document references, which greatly enhances 
+      accuracy of the LLM responses.
+  Training Data:
+    id: training-data-asset-id
+    description: Data used to train the LLM.
+    usage: business # values: business, devops
+    tags:
+      - training
+    origin: Training Data
+    owner: Business AI Team
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The training data contains sensitive data that could be used to access 
+      the Customer Portal, therefore, it is confidential.
+      The integrity of the training data is mission-critical as the tampering with 
+      the training data would directly impact the use of the Customer Portal.
+      The availability of the training data is mission-critical as the system must 
+      be able to retrieve the training data, which greatly enhances accuracy of the LLM responses.
+technical_assets:
+  Customer Portal User:
+    id: customer-portal-user-asset-id
+    description: Represents the individual interacting with the system via the frontend.
+    type: external-entity # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: application # values: system, service, application, component
+    technology: unknown-technology # values: see help
+    tags:
+      - human
+      - start
+    internet: false
+    machine: physical # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Customer
+    confidentiality: restricted # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The customer restricts data to only those deemed necessary for their 
+      use of the Customer Portal. The customer is responsible for the 
+      security and integrity of their own data while using the Customer Portal, 
+      therefore critical integrity for the user that implies the application must 
+      provide better integrity.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed: # sequence of IDs to reference
+      - user-input-asset-id
+      - authentication-tokens-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - user-input-asset-id
+      - authentication-tokens-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+      - csv
+    communication_links:
+      User Authentication:
+        target: authentication-service-asset-id
+        description: Ensures secure access for users. 
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+          - Authentication
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - user-id-asset-id
+          - user-password-asset-id
+        data_assets_received: # sequence of IDs to reference
+          - authentication-tokens-asset-id
+      Frontend Interface:
+        target: customer-portal-frontend-asset-id
+        description: Communications to the interface for user input and interaction.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - user-input-asset-id
+        data_assets_received: # sequence of IDs to reference
+          - llm-answers-asset-id
+  Customer Portal Frontend:
+    id: customer-portal-frontend-asset-id
+    description: Acts as the interface for user input and interaction. 
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: true
+    out_of_scope: false
+    justification_out_of_scope:
+    size: component # values: system, service, application, component
+    technology: web-application # values: see help
+    tags:
+      - web
+      - public
+    internet: true
+    machine: container # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Technical Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The frontend is responsible for user interactions and data processing, 
+      therefore critical confidentiality, integrity, and availability.
+    multi_tenant: true
+    redundant: true
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - user-input-asset-id
+    data_assets_stored: # sequence of IDs to reference
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - xml
+    communication_links:
+      Send User Input to Search Service:
+        target: search-service-asset-id
+        description: Sends the user input to the search service.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - user-input-asset-id
+        data_assets_received: # sequence of IDs to reference
+  Authentication Service:
+    id: authentication-service-asset-id
+    description: Handles user authentication and authorization.
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: true
+    justification_out_of_scope: >
+      The authentication service is not part of the GenAI RAG system and is 
+      therefore out of scope.
+    size: service # values: system, service, application, component
+    technology: identity-provider # values: see help
+    tags:
+      - authentication
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: data-with-enduser-individual-key # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Security Team
+    confidentiality: strictly-confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: mission-critical # values: archive, operational, important, critical, mission-critical
+    availability: mission-critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The authentication service is responsible for user authentication and 
+      authorization, therefore, it is strictly confidential.
+      The integrity of the authentication service is mission-critical as the 
+      tampering with the authentication service would directly impact the use 
+      of the Customer Portal.
+      The availability of the authentication service is mission-critical as the 
+      user must authenticate.
+    multi_tenant: false
+    redundant: true
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - user-id-asset-id
+      - user-password-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - authentication-tokens-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - serialization
+    communication_links:
+  Search Service:
+    id: search-service-asset-id
+    description: Processes user input and retrieves relevant documents from the knowledge base.
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: application-server # values: see help
+    tags:
+      - user-input
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Technical Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The search service is responsible for processing user input and retrieving 
+      relevant documents from the knowledge base, therefore, it is confidential.
+      The integrity of the search service is critical as the tampering with the 
+      search service would directly impact the use of the Customer Portal.
+      The availability of the search service is critical as the user must be 
+      able to search for relevant documents.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - user-input-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - kb-documents-asset-id
+      - kb-embeddings-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+      - csv
+    communication_links:
+      Send Input to Embeddings Model:
+        target: embeddings-model-knowledge-base-asset-id
+        description: Sends the user input to the embeddings model.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - user-input-asset-id
+      Send Input & Docs to Query Service:
+        target: query-service-asset-id
+        description: Sends the user input and documents to the query service.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - user-input-asset-id
+          - kb-documents-asset-id
+        data_assets_received: # sequence of IDs to reference
+  Query Service:
+    id: query-service-asset-id
+    description: Builds prompts using data from multiple sources and sends queries to the LLM.
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    tags:
+      - user-input
+    size: service # values: system, service, application, component
+    technology: application-server # values: see help
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The query service is responsible for building prompts using data from 
+      multiple sources and sending queries to the LLM, therefore, it is 
+      confidential.
+      The integrity of the query service is critical as the tampering with the 
+      query service would directly impact the use of the Customer Portal.
+      The availability of the query service is critical as the user must be 
+      able to query the LLM.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed: # sequence of IDs to reference
+      - user-input-asset-id
+      - kb-documents-asset-id
+      - prompts-asset-id
+      - conversation-history-asset-id
+      - context-asset-id
+    data_assets_stored: # sequence of IDs to reference
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - json
+      - csv
+    communication_links:
+      Retrieve Instructions from Prompt Store:
+        target: prompt-store-asset-id
+        description: Retrieves instructions from the prompt store.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - prompts-asset-id
+        data_assets_received: # sequence of IDs to reference
+      Retrieve Context from Context Generator:
+        target: context-generator-asset-id
+        description: Retrieves the context from the context generator.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - conversation-history-asset-id
+        data_assets_received: # sequence of IDs to reference
+      Send Prompt to LLM:
+        target: llm-asset-id
+        description: Sends the final prompt to the LLM.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - prompts-asset-id
+        data_assets_received: # sequence of IDs to reference
+      Send LLM Output to Frontend:
+        target: llm-asset-id
+        description: Sends the LLM output to the frontend.
+        protocol: https # values: see help
+        authentication: none # values: none, credentials, session-id, token, client-certificate, two-factor
+        authorization: none # values: none, technical-user, enduser-identity-propagation
+        tags:
+        vpn: false
+        ip_filtered: false
+        readonly: false
+        usage: business # values: business, devops
+        data_assets_sent: # sequence of IDs to reference
+          - llm-answers-asset-id
+        data_assets_received: # sequence of IDs to reference
+  Document Vector Database:
+    id: document-vector-database-asset-id
+    description: Knowledge base documents into a machine-understandable format.
+    type: datastore # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: database # values: see help
+    tags:
+      - kb-embeddings
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    quantity: very-many # values: very-few, few, many, very-many
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The document vector database is responsible for storing the knowledge base 
+      documents in a machine-understandable format, therefore, it is confidential.
+      The integrity of the document vector database is critical as the tampering 
+      with the document vector database would directly impact the use of the 
+      Customer Portal.
+      The availability of the document vector database is critical as the user 
+      must be able to retrieve the knowledge base documents.
+    multi_tenant: true
+    redundant: true
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - kb-documents-asset-id
+      - user-input-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - kb-embeddings-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+    communication_links:
+  Knowledge Base:
+    id: knowledge-base-asset-id
+    description: Stores documents and their references for retrieval by the search service. 
+    type: datastore # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: database # values: see help
+    tags:
+      - kb-documents
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The knowledge base is responsible for storing documents and information 
+      for retrieval by the search service, therefore, it is confidential.
+      The integrity of the knowledge base is critical as the tampering with the 
+      knowledge base would directly impact the use of the Customer Portal.
+      The availability of the knowledge base is critical as the user must be 
+      able to retrieve the documents and information.
+    multi_tenant: true
+    redundant: true
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+    data_assets_stored: # sequence of IDs to reference
+      - kb-documents-asset-id
+      - kb-embeddings-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+      - csv
+    communication_links:
+  Prompt Store:
+    id: prompt-store-asset-id
+    description: Stores pre-defined instructions, templates, and user-specific prompts. 
+    type: datastore # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: database # values: see help
+    tags:
+      - prompts
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The prompt store is responsible for storing pre-defined instructions, 
+      templates, and user-specific prompts, therefore, it is confidential.
+      The integrity of the prompt store is critical as the tampering with the 
+      prompt store would directly impact the use of the Customer Portal.
+      The availability of the prompt store is critical as the user must be 
+      able to retrieve the pre-defined instructions, templates, and user-specific 
+      prompts.
+    multi_tenant: true
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - prompts-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - prompts-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+      - csv
+    communication_links:
+  Conversation History DB:
+    id: conversation-history-db-asset-id
+    description: Maintains a history of past interactions.
+    type: datastore # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: database # values: see help 
+    tags:
+      - conversation-history
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Customer End User
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The conversation history database is responsible for maintaining a history 
+      of past interactions, therefore, it is confidential.
+      The integrity of the conversation history database is critical as the 
+      tampering with the conversation history database would directly impact 
+      the use of the Customer Portal.
+      The availability of the conversation history database is critical as the 
+      user must be able to retrieve the conversation history.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed: # sequence of IDs to reference
+      - conversation-history-asset-id
+      - user-input-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - conversation-history-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+      - json
+      - csv
+    communication_links:
+  Context Generator:
+    id: context-generator-asset-id
+    description: Supplies contextual information to enhance prompt relevance. 
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: web-application # values: see help
+    tags:
+      - 3rd-party-integration
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The context generator is responsible for supplying contextual information 
+      to enhance prompt relevance, therefore, it is confidential.
+      The integrity of the context generator is critical as the tampering with 
+      the context generator would directly impact the use of the Customer Portal.
+      The availability of the context generator is critical as the user must be 
+      able to retrieve the contextual information.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: true
+    data_assets_processed: # sequence of IDs to reference
+      - conversation-history-asset-id
+      - user-input-asset-id
+    data_assets_stored: # sequence of IDs to reference
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - json
+      - csv
+      - xml
+      - serialization
+    communication_links:
+  LLM:
+    id: llm-asset-id
+    description: Processes the final prompt to generate answers and references. 
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: false
+    justification_out_of_scope:
+    size: service # values: system, service, application, component
+    technology: ai # values: see help
+    tags:
+      - llm
+    internet: false
+    machine: virtual # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: confidential # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: critical # values: archive, operational, important, critical, mission-critical
+    availability: critical # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The LLM is responsible for processing the final prompt to generate answers and references, therefore, it is confidential.
+      The integrity of the LLM is critical as the tampering with the LLM would directly impact the use of the Customer Portal.
+      The availability of the LLM is critical as the user must be able to generate answers and references.
+    multi_tenant: false
+    redundant: true
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - prompts-asset-id
+    data_assets_stored: # sequence of IDs to reference
+      - prompts-asset-id
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - json
+      - file
+    communication_links:
+  Embeddings Model (Knowledge Base):
+    id: embeddings-model-knowledge-base-asset-id
+    description: Embedding model used for knowledge base documents vectorization.
+    type: process # values: external-entity, process, datastore
+    usage: business # values: business, devops
+    used_as_client_by_human: false
+    out_of_scope: true
+    justification_out_of_scope: Owned and managed by 3rd party
+    size: service # values: system, service, application, component
+    technology: ai # values: see help
+    tags:
+      - kb-embeddings
+    internet: false
+    machine: serverless # values: physical, virtual, container, serverless
+    encryption: none # values: none, transparent, data-with-symmetric-shared-key, data-with-asymmetric-shared-key, data-with-enduser-individual-key
+    owner: Business AI Team
+    confidentiality: public # values: public, internal, restricted, confidential, strictly-confidential
+    integrity: operational # values: archive, operational, important, critical, mission-critical
+    availability: operational # values: archive, operational, important, critical, mission-critical
+    justification_cia_rating: >
+      The embeddings model is open source, and used for embedding knowledge base 
+      documents, therefore, it is public.
+      The integrity of the embeddings model is operational as the tampering with 
+      the embeddings model would directly impact the use of the Customer Portal.
+      The availability of the embeddings model is operational as the user must be 
+      able to retrieve the embeddings.
+    multi_tenant: false
+    redundant: false
+    custom_developed_parts: false
+    data_assets_processed: # sequence of IDs to reference
+      - kb-documents-asset-id
+    data_assets_stored: # sequence of IDs to reference
+    data_formats_accepted: # sequence of formats like: json, xml, serialization, file, csv
+      - file
+    communication_links:
+trust_boundaries:
+  Business Cloud AI Network:
+    id: business-cloud-ai-network-trust-boundary-id
+    description: The trust boundary for the public cloud infrastructure operated by the Business.
+    type: network-cloud-provider # values: see help
+    tags:
+    technical_assets_inside: # sequence of IDs to reference
+      - llm-asset-id
+    trust_boundaries_nested: # sequence of IDs to reference
+  Business Cloud Network:
+    id: business-cloud-network-trust-boundary-id
+    description: The trust boundary for the public cloud infrastructure operated by the Business.
+    type: network-cloud-provider # values: see help
+    tags:
+    technical_assets_inside: # sequence of IDs to reference
+      - customer-portal-frontend-asset-id
+      - search-service-asset-id
+      - query-service-asset-id
+      - conversation-history-db-asset-id
+      - prompt-store-asset-id
+    trust_boundaries_nested: # sequence of IDs to reference
+      - business-cloud-ai-network-trust-boundary-id
+  Business On-Premises Network:
+    id: business-on-premises-network-trust-boundary-id
+    description: The trust boundary for the on-premises infrastructure operated by the Business.
+    type: network-on-prem # values: see help
+    tags:
+    technical_assets_inside: # sequence of IDs to reference
+      - context-generator-asset-id
+    trust_boundaries_nested: # sequence of IDs to reference
+shared_runtimes:
+  Conversation Runtime:
+    id: conversation-runtime-shared-runtime-id
+    description: The shared runtime for the conversation history embedding and database storage.
+    tags:
+    technical_assets_running: # sequence of IDs to reference
+      - conversation-history-db-asset-id
+      - prompt-store-asset-id
+individual_risk_categories: # used for adding custom manually identified risks
+  Unauthorized_Access:
+    id: unauthorized-access-risk-category-id
+    description: Unauthorized access to sensitive data and system components.
+    impact: Exposure of sensitive documents and data.
+    asvs: V0 - Something Strange
+    cheat_sheet: https://example.com
+    action: Some text describing the action...
+    mitigation: Some text describing the mitigation...
+    check: Check if XYZ...
+    function: business-side # values: business-side, architecture, development, operations
+    stride: repudiation # values: spoofing, tampering, repudiation, information-disclosure, denial-of-service, elevation-of-privilege
+    detection_logic: Some text describing the detection logic...
+    risk_assessment: Some text describing the risk assessment...
+    false_positives: Some text describing the most common types of false positives...
+    model_failure_possible_reason: false
+    cwe: 693
+    risks_identified:
+      <b>Example Individual Risk</b> at <b>Some Technical Asset</b>:
+        severity: critical # values: low, medium, elevated, high, critical
+        exploitation_likelihood: likely # values: unlikely, likely, very-likely, frequent
+        exploitation_impact: medium # values: low, medium, high, very-high
+        data_breach_probability: probable # values: improbable, possible, probable
+        data_breach_technical_assets: # list of technical asset IDs which might have data breach
+          - customer-portal-frontend-asset-id
+        most_relevant_data_asset:
+        most_relevant_technical_asset: customer-portal-frontend-asset-id
+        most_relevant_communication_link:
+        most_relevant_trust_boundary:
+        most_relevant_shared_runtime:
+risk_tracking:
+  # NOTE: For risk tracking each risk-id needs to be defined (the string with the @ sign in it). These unique risk IDs
+  # are visible in the PDF report (the small grey string under each risk), the Excel (column ID), as well as the JSON responses.
+  # Some risk IDs have only one @ sign in them, while others multiple. The idea is to allow for unique but still speaking IDs.
+  # Therefore each risk instance creates its individual ID by taking all affected elements causing the risk to be within an @-delimited part.
+  # Using wildcards (the * sign) for parts delimited by @ signs allows to handle groups of certain risks at once. Best is to lookup the IDs
+  # to use in the created Excel file. Alternatively a model macro seed-risk-tracking is available that helps in initially
+  # seeding the risk tracking part here based on already identified and not yet handled risks.
+  unencrypted-asset@customer-portal-frontend-asset-id: # wildcards * between the @ characters are possible
+    status: accepted # values: unchecked, in-discussion, accepted, in-progress, mitigated, false-positive
+    justification: Risk accepted as tolerable
+    ticket: XYZ-1234
+    date: 2020-01-04
+    checked_by: John Doe
+    Unauthorized_Access:
+    severity: critical
+    exploitation_likelihood: likely
+    exploitation_impact: critical
+    detection_logic: Monitor authentication failures and unusual access patterns.
+    risk_assessment: High risk due to access to sensitive components like Auth and Knowledge Base.
+    false_positives: Legitimate multiple login attempts by users.
+    model_failure_possible_reason: false
+    cwe: 284
+    impact: Unauthorized access to sensitive data and system components.
+    action: Implement multi-factor authentication and regular access reviews.
+    mitigation: Enhance authentication mechanisms and monitor access logs.
+  data-leakage@llm-asset-id:
+    status: accepted # values: unchecked, in-discussion, accepted, in-progress, mitigated, false-positive
+    justification: Risk accepted as tolerable
+    ticket: XYZ-1234
+    date: 2020-01-04
+    checked_by: John Doe
+    severity: high
+    exploitation_likelihood: likely
+    exploitation_impact: high
+    detection_logic: Monitor data transfers and access to the Knowledge Base.
+    risk_assessment: High risk due to storage of sensitive documents in the Knowledge Base.
+    false_positives: Authorized data exports or backups.
+    model_failure_possible_reason: false
+    cwe: 200
+    impact: Exposure of sensitive documents and data.
+    action: Implement data encryption and access controls.
+    mitigation: Use encryption at rest and in transit, and enforce strict access policies.
+  service-disruption@customer-portal-frontend-asset-id:
+    status: accepted # values: unchecked, in-discussion, accepted, in-progress, mitigated, false-positive
+    justification: Risk accepted as tolerable
+    ticket: XYZ-1234
+    date: 2020-01-04
+    checked_by: John Doe
+    severity: medium
+    exploitation_likelihood: likely
+    exploitation_impact: elevated
+    detection_logic: Monitor service uptime and response times.
+    risk_assessment: Medium risk due to dependencies between services.
+    false_positives: Temporary network issues or maintenance activities.
+    model_failure_possible_reason: false
+    cwe: 703
+    impact: Disruption of service availability affecting user experience.
+    action: Implement redundancy and failover strategies.
+    mitigation: Use load balancers and replicate critical services.
