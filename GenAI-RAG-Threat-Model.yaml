@@ -3,12 +3,14 @@ title: Customer Portal Threat Model
 date: 2024-12-01
 toDo: >
   - Better output:
-      - Add Markdown output
-        - Risk description is only in STRIDE section of the PDF output
-      - Customize PDF output
+      - Add Markdown output to be comprehensive of the YAML file
+      - Update py script to be more comprehensive of the YAML file
   - Manually review (AI didn't help) individual_risks_categories for a risk hierarchy; 
     there are many 1 category to 1 risk relationships currently.
     - Update risks identified with the hierarchy to the risks_identified section.
+  - Add personas
+    - Not available currently in schema
+    - Want to account for data ownership, technical asset ownership, risk ownership
 author:
   name: Aaron Smith
   homepage: phenomsec.com
@@ -1019,8 +1021,8 @@ technical_assets:
     justification_cia_rating: >
       The document vector database is responsible for storing the knowledge base 
       documents in a machine-understandable format, therefore, it is confidential.
-      The integrity of the document vector database is critical as the tampering 
-      with the document vector database would directly impact the use of the 
+      The integrity of the document vector database is critical as the tampering with 
+      the document vector database would directly impact the use of the 
       Customer Portal.
       The availability of the document vector database is critical as the user 
       must be able to retrieve the knowledge base documents.
@@ -1600,36 +1602,37 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: unauthorized-access-risk-category-id
     description: Unauthorized access to sensitive data and system components.
     impact: Exposure of sensitive documents and data.
-    asvs: V0 - Something Strange
-    cheat_sheet: https://example.com
-    action: Some text describing the action...
-    mitigation: Some text describing the mitigation...
-    check: Check if XYZ...
-    function: business-side # values: business-side, architecture, development, operations
-    stride: repudiation # values: spoofing, tampering, repudiation, information-disclosure, denial-of-service, elevation-of-privilege
-    detection_logic: Some text describing the detection logic...
-    risk_assessment: Some text describing the risk assessment...
-    false_positives: Some text describing the most common types of false positives...
+    asvs: V3 - Access Control Verification
+    cheat_sheet: https://owasp.org/www-project-access-control-cheat-sheet/
+    action: Implement robust access control mechanisms to prevent unauthorized access.
+    mitigation: Enforce role-based access controls (RBAC), use multi-factor authentication, and restrict access based on least privilege.
+    check: Regularly review and audit access logs, and perform access control assessments.
+    function: architecture
+    stride: information-disclosure
+    detection_logic: Monitor authentication failures and unusual access patterns.
+    risk_assessment: High risk due to potential for unauthorized data access and system compromise.
+    false_positives: Legitimate multiple login attempts by users.
     model_failure_possible_reason: false
-    cwe: 693
+    cwe: 284
     risks_identified:
-      <b>Example Individual Risk</b> at <b>Some Technical Asset</b>:
-        severity: critical # values: low, medium, elevated, high, critical
-        exploitation_likelihood: likely # values: unlikely, likely, very-likely, frequent
-        exploitation_impact: medium # values: low, medium, high, very-high
-        data_breach_probability: probable # values: improbable, possible, probable
-        data_breach_technical_assets: # list of technical asset IDs which might have data breach
+      Unauthorized Access at customer-portal-frontend-taid:
+        severity: critical
+        exploitation_likelihood: likely
+        exploitation_impact: critical
+        data_breach_probability: probable
+        data_breach_technical_assets:
           - customer-portal-frontend-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: user-input-daid
         most_relevant_technical_asset: customer-portal-frontend-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: Frontend Interface
+        most_relevant_trust_boundary: business-cloud-network-trust-boundary-id
+        most_relevant_shared_runtime: Conversation Runtime
+
   Improper Input Validation:
     id: improper-input-validation
     description: Risks associated with failing to properly validate input data, leading to potential data tampering and unauthorized access.
     impact: Exposure of sensitive data and potential system compromise due to unvalidated inputs.
-    asvs: V1 - Input Validation Risk Assessment
+    asvs: V9 - Input Validation Verification
     cheat_sheet: https://owasp.org/www-project-cheat-sheets/cheatsheets/Input_Validation_Cheat_Sheet.html
     action: Implement comprehensive input validation mechanisms to ensure all data is sanitized and validated before processing.
     mitigation: Use allow-lists for input validation, employ robust sanitization libraries, and regularly update validation rules.
@@ -1649,16 +1652,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: probable
         data_breach_technical_assets:
           - customer-portal-frontend-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: user-input-daid
         most_relevant_technical_asset: customer-portal-frontend-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: Frontend Interface
+        most_relevant_trust_boundary: business-cloud-network-trust-boundary-id
+        most_relevant_shared_runtime: Conversation Runtime
+
   Reliance on Untrusted Inputs in Security Decision:
     id: reliance-on-untrusted-inputs
     description: Risks associated with making security decisions based on data that can be influenced by an attacker, leading to compromised system integrity.
     impact: Unauthorized access and potential system breaches due to reliance on tampered or untrusted data.
-    asvs: V1 - Security Decision Risk Assessment
+    asvs: V7 - Data Validation Verification
     cheat_sheet: https://owasp.org/www-project-security-decision-making/
     action: Ensure all data used in security-critical decisions is authenticated and validated against trusted sources.
     mitigation: Implement mutual authentication mechanisms and avoid making security decisions based solely on external inputs.
@@ -1678,46 +1682,48 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: probable
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: user-input-daid
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: Query Service
+        most_relevant_trust_boundary: knowledge-base-service-boundary-id
+        most_relevant_shared_runtime: Conversation Runtime
+
   GenAI Model Training Data:
     id: genai-model-training-data-risk-category-id
     description: Ensuring the accuracy, validity, and integrity of data used in training and inference to prevent data manipulation or corruption.
-    impact: Exposure of sensitive documents and data.
-    asvs: V0 - Something Strange
-    cheat_sheet: https://example.com
-    action: Some text describing the action...
-    mitigation: Some text describing the mitigation...
-    check: Check if XYZ...
-    function: business-side # values: business-side, architecture, development, operations
-    stride: spoofing # values: spoofing, tampering, repudiation, information-disclosure, denial-of-service, elevation-of-privilege
-    detection_logic: Some text describing the detection logic...
-    risk_assessment: Some text describing the risk assessment...
-    false_positives: Some text describing the most common types of false positives...
+    impact: Compromise of model performance and potential exposure of sensitive data.
+    asvs: V4 - Data Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-data-integrity-cheat-sheet/
+    action: Implement strict data validation and integrity checks during the data ingestion and processing stages.
+    mitigation: Use secure data storage solutions, enforce access controls, and regularly audit data sources and pipelines for integrity.
+    check: Conduct periodic audits of data sources, verify data consistency, and monitor for unauthorized data changes.
+    function: development
+    stride: tampering
+    detection_logic: Monitor data ingestion pipelines for anomalies, implement checksums and hashes to verify data integrity.
+    risk_assessment: High risk due to potential for data manipulation affecting model training and decision-making processes.
+    false_positives: Legitimate data updates and modifications during routine maintenance.
     model_failure_possible_reason: false
     cwe: 693
     risks_identified:
-      <b>Example Individual Risk</b> at <b>Some Technical Asset</b>:
-        severity: critical # values: low, medium, elevated, high, critical
-        exploitation_likelihood: likely # values: unlikely, likely, very-likely, frequent
-        exploitation_impact: medium # values: low, medium, high, very-high
-        data_breach_probability: probable # values: improbable, possible, probable
-        data_breach_technical_assets: # list of technical asset IDs which might have data breach
-          - customer-portal-frontend-taid
-        most_relevant_data_asset:
-        most_relevant_technical_asset: customer-portal-frontend-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+      Data Manipulation in Training Data at llm-foundation-model-taid:
+        severity: critical
+        exploitation_likelihood: likely
+        exploitation_impact: critical
+        data_breach_probability: probable
+        data_breach_technical_assets:
+          - llm-foundation-model-taid
+        most_relevant_data_asset: training-data-daid
+        most_relevant_technical_asset: llm-foundation-model-taid
+        most_relevant_communication_link: Data Ingestion Pipeline
+        most_relevant_trust_boundary: Data Ingestion Network Boundary
+        most_relevant_shared_runtime: Training Environment
+
   Potentially Unknown Data in Foundation Model (Pre-Built):
     id: potentially-unknown-data-foundation-model-pre-built
     description: Risks associated with the use of pre-built foundation models that may contain unknown or unverified training data.
     impact: Exposure of potentially sensitive or proprietary data used in training the foundation model.
     asvs: V1 - Foundation Model Risk Assessment
-    cheat_sheet: https://example.com/foundation-model-risk-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-foundation-model-risk-cheat-sheet/
     action: Evaluate and document the origin and nature of training data used in pre-built foundation models.
     mitigation: Prefer using custom foundation models with known training data sources or implement data validation mechanisms.
     check: Verify the source and integrity of training data used in foundation models.
@@ -1736,17 +1742,18 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
+
   Potentially Unknown Data in Fine-Tuned Model:
     id: potentially-unknown-data-fine-tuned-model
     description: Risks associated with fine-tuning foundation models using known and unknown training data.
     impact: Exposure and potential tampering of training data augmented by fine-tuning processes.
     asvs: V1 - Fine-Tuning Model Risk Assessment
-    cheat_sheet: https://example.com/fine-tuned-model-risk-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-fine-tuned-model-risk-cheatsheet/
     action: Ensure that fine-tuning data is sanitized and validated, and maintain logs of data sources.
     mitigation: Use only verified and approved data sources for fine-tuning and implement access controls.
     check: Regularly audit the fine-tuning processes and data sources used.
@@ -1765,17 +1772,18 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: probable
         data_breach_technical_assets:
           - embeddings-model-knowledge-base-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: embeddings-model-knowledge-base-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
+
   Foundation Model (Custom):
     id: foundation-model-custom
     description: Utilizes foundation models trained with known and verified data sources, minimizing the risk of exposure to unknown or sensitive data.
     impact: Reduced risk of data breaches and integrity issues due to controlled training data.
     asvs: V1 - Custom Foundation Model Risk Assessment
-    cheat_sheet: https://example.com/custom-foundation-model-risk-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-custom-foundation-model-risk-cheatsheet/
     action: Maintain documentation of all data sources used in training custom foundation models.
     mitigation: Implement strict data governance policies and regular audits to ensure data integrity.
     check: Conduct periodic reviews of training data and model performance to identify any anomalies.
@@ -1794,17 +1802,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: improbable
         data_breach_technical_assets:
           - embeddings-model-knowledge-base-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: embeddings-model-knowledge-base-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   LLM Denial of Service:
     id: llm-denial-of-service
     description: Risks associated with LLM denial of service, such as high volume of requests, resource-intensive queries, and repetitive long inputs to overflow context.
     impact: Unavailability of LLM service due to resource exhaustion or other issues.
     asvs: V1 - LLM Risk Assessment
-    cheat_sheet: https://example.com/llm-denial-of-service-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-llm-risk-cheat-sheet/
     action: Implement rate limiting, resource allocation, throttling, and monitoring to prevent resource exhaustion.
     mitigation: Use cloud-based LLM services with built-in resource management.
     check: Regularly monitor LLM usage and adjust configurations as needed.
@@ -1823,24 +1831,25 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+          - llm-fine-tuned-model-taid
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Untrusted Data:
     id: untrusted-data-risk-category-id
     description: Risks associated with the use of untrusted data, such as data from user input, external sources, or unknown training data.
     impact: Exposure of potentially malicious, sensitive, or improper data used by systems to perform tasks.
     asvs: V1 - Untrusted Data Risk Assessment
-    cheat_sheet: https://example.com/untrusted-data-risk-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-untrusted-data-risk-cheatsheet/
     action: Implement data validation, sanitization, and filtering mechanisms to ensure only trusted data is processed.
     mitigation: Use data validation libraries, implement input validation rules, and regularly audit data processing pipelines.
     check: Conduct regular code reviews and use automated tools to verify data processing implementations.
     function: architecture
     stride: spoofing
-    detection_logic: 
-    risk_assessment: 
+    detection_logic: Employ comprehensive data validation and sanitization processes, utilize anomaly detection systems to identify malicious data patterns, and ensure all external data sources are trusted and verified.
+    risk_assessment: High risk due to the potential for introducing malicious data that can compromise system integrity and expose sensitive information.
     false_positives: Legitimate use of verified pre-built models with disclosed training data.
     model_failure_possible_reason: false
     cwe: 327
@@ -1915,7 +1924,7 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: Risks associated with granting excessive permissions to users or systems, leading to unauthorized access or data breaches.
     impact: Exposure of sensitive data and potential system compromise due to overly permissive access controls.
     asvs: V1 - Excessive Permissions Risk Assessment
-    cheat_sheet: https://example.com/excessive-permissions-cheatsheet
+    cheat_sheet: https://owasp.org/www-project-access-control-cheat-sheet/
     action: Implement least privilege access controls and regularly review and adjust permissions.
     mitigation: Use automated tools to identify and manage excessive permissions.
     check: Conduct periodic audits of user and system permissions.
@@ -1943,6 +1952,8 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: supply-chain-vulnerabilities
     description: Risks introduced by insecure third-party components, datasets, or pre-trained models.
     impact: Affects operational integrity.
+    asvs: V1 - Supply Chain Vulnerabilities Risk Assessment
+    cheat_sheet: https://owasp.org/www-project-software-supply-chain-security-cheat-sheet/
     action: Implement a thorough vetting process for third-party components and datasets.
     mitigation: Regular audits and updates of third-party dependencies.
     check: Conduct regular security assessments of third-party components and datasets.
@@ -1961,15 +1972,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Energy-Latency Attacks:
     id: energy-latency-attacks
     description: Denial of service through resource exhaustion by manipulating neural network energy usage or latency.
     impact: Disrupts model availability.
+    asvs: V1 - Energy-Latency Attacks Risk Assessment
+    cheat_sheet: https://owasp.org/www-project-denial-of-service-cheat-sheet/
     action: Optimize neural network configurations.
     mitigation: Use energy-efficient hardware and software solutions.
     check: Regularly monitor energy consumption and latency.
@@ -1989,21 +2002,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   AI's Effect on Security Elsewhere:
     id: ai-effect-on-security
     description: Vulnerabilities introduced by automated systems in security operations.
     impact: Affects overall security posture.
+    asvs: V1 - AI's Effect on Security Risk Assessment
+    cheat_sheet: https://owasp.org/www-project-security-decision-making/cheat-sheet/
     action: Assess AI's impact on existing security measures.
     mitigation: Regularly review AI-driven security operations for vulnerabilities.
     check: Implement regular security audits and reviews of AI-driven security operations.
     function: architecture
     stride: spoofing
-    detection_logic: Monitor and verify the integrity of third-party components and datasets.
+    detection_logic: Monitor and verify the integrity of automated security systems and their outputs.
     risk_assessment: High risk due to potential for data breaches and system compromise.
     false_positives: Legitimate use of verified third-party components and datasets.
     model_failure_possible_reason: false
@@ -2017,15 +2032,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Insecure Output Handling:
     id: insecure-output-handling
     description: Poor validation of outputs leading to harmful consequences.
     impact: Potential for XSS or command injection.
+    asvs: V4 - Output Validation Verification
+    cheat_sheet: https://owasp.org/www-project-cheat-sheets/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
     action: Implement strict output validation.
     mitigation: Use output encoding and escaping techniques.
     check: Regularly audit output handling for vulnerabilities.
@@ -2044,15 +2061,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Insecure Plugin Design:
     id: insecure-plugin-design
     description: Vulnerabilities in plugin systems interacting with LLMs.
     impact: Enables unauthorized actions.
+    asvs: V3 - Plugin Security Assurance
+    cheat_sheet: https://owasp.org/www-project-cheat-sheets/cheatsheets/Input_Validation_Cheat_Sheet.html
     action: Conduct security reviews of plugin interfaces.
     mitigation: Implement access controls and authentication for plugins.
     check: Regularly audit plugin interfaces for vulnerabilities.
@@ -2071,20 +2090,22 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Sensitive Information Disclosure:
     id: sensitive-information-disclosure
     description: Leakage of private or regulated data.
     impact: Compliance challenges under laws like GDPR or HIPAA.
+    asvs: V5 - Data Privacy and Protection Verification
+    cheat_sheet: https://owasp.org/www-community/Data_Protection
     action: Implement data masking and anonymization techniques.
     mitigation: Regularly audit data handling processes for compliance.
     check: Conduct regular data handling audits and compliance checks.
     function: architecture
-    stride: spoofing
+    stride: information-disclosure
     detection_logic: Implement data masking and anonymization techniques.
     risk_assessment: High risk due to potential for data breaches and compliance violations.
     false_positives: Legitimate use of data masking and anonymization techniques.
@@ -2098,15 +2119,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Overreliance on LLMs:
     id: overreliance-on-llms
     description: Misuse or uncritical adoption of LLM outputs for regulated processes.
     impact: Risks non-compliance.
+    asvs: V4 - LLM Governance Verification
+    cheat_sheet: https://owasp.org/www-project-ai-governance-cheat-sheet/
     action: Establish guidelines for LLM usage in regulated processes.
     mitigation: Ensure human oversight in critical decision-making.
     check: Implement regular audits and reviews of LLM usage in regulated processes.
@@ -2125,15 +2148,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Training Data Poisoning:
     id: training-data-poisoning
     description: Introduction of malicious or biased data affecting ethical AI usage.
     impact: Affects ethical AI usage.
+    asvs: V3 - Training Data Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-training-data-integrity-cheat-sheet/
     action: Use data provenance tools to track and verify data sources.
     mitigation: Regularly review training data for biases and inaccuracies.
     check: Implement data provenance tools and regular data audits.
@@ -2152,15 +2177,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Excessive Agency:
     id: excessive-agency
     description: Over-autonomizing LLMs in decision-making processes.
     impact: Risks actions contrary to ethical norms.
+    asvs: V4 - LLM Governance Verification
+    cheat_sheet: https://owasp.org/www-project-ai-governance-cheat-sheet/
     action: Define clear boundaries for LLM autonomy.
     mitigation: Implement fail-safes and human intervention points.
     check: Implement regular audits and reviews of LLM autonomy.
@@ -2188,11 +2215,13 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: data-drift
     description: Changes in data distribution over time affecting model performance.
     impact: Degrades model accuracy.
+    asvs: V6 - Data Quality and Consistency Verification
+    cheat_sheet: https://owasp.org/www-project-data-quality-cheat-sheet/
     action: Monitor data distribution and retrain models as needed.
     mitigation: Implement data drift detection and retraining mechanisms.
     check: Implement data drift detection and retraining mechanisms.
     function: architecture
-    stride: spoofing
+    stride: information-disclosure
     detection_logic: Implement data drift detection and retraining mechanisms.
     risk_assessment: High risk due to potential for model degradation.
     false_positives: Legitimate use of data drift detection and retraining mechanisms.
@@ -2215,6 +2244,8 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: model-interpretability
     description: Lack of transparency in model decisions.
     impact: Leads to trust issues.
+    asvs: V2 - Model Transparency Verification
+    cheat_sheet: https://owasp.org/www-project-model-transparency-cheat-sheet/
     action: Implement tools to explain model decisions.
     mitigation: Use tools to explain model decisions.
     check: Implement tools to explain model decisions.
@@ -2242,16 +2273,18 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: cultural-bias
     description: Unintended biases in LLM outputs.
     impact: Affects diverse user groups.
+    asvs: V5 - Bias Detection and Mitigation Verification
+    cheat_sheet: https://owasp.org/www-project-bias-detection-cheat-sheet/
     action: Regularly evaluate model outputs for cultural biases.
     mitigation: Implement cultural sensitivity training for LLM developers.
-    check: Implement cultural sensitivity training for LLM developers.
+    check: Regularly evaluate model outputs for cultural biases.
     function: architecture
-    stride: spoofing
-    detection_logic: Implement cultural sensitivity training for LLM developers.
+    stride: information-disclosure
+    detection_logic: Regularly evaluate model outputs and use bias detection tools.
     risk_assessment: High risk due to potential for cultural biases.
-    false_positives: Legitimate use of cultural sensitivity training for LLM developers.
+    false_positives: Legitimate use of culturally sensitive content.
     model_failure_possible_reason: false
-    cwe: 327
+    cwe: 350
     risks_identified:
       Cultural Bias at llm-foundation-model-taid:
         severity: high
@@ -2261,25 +2294,27 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Skewing:
     id: model-skewing
     description: Adjusting the data distribution to introduce bias during training.
     impact: Introduces bias and affects model fairness.
+    asvs: V6 - Data Quality and Consistency Verification
+    cheat_sheet: https://owasp.org/www-project-data-quality-cheat-sheet/
     action: Implement data validation and monitoring to detect skewing.
     mitigation: Regularly review and balance training datasets.
     check: Conduct bias audits and use fairness metrics.
     function: architecture
     stride: tampering
-    detection_logic: Monitor data distribution for anomalies.
+    detection_logic: Monitor data distribution for anomalies using statistical methods.
     risk_assessment: High risk due to potential for biased outputs.
     false_positives: Legitimate data distribution changes.
     model_failure_possible_reason: false
-    cwe: 200
+    cwe: 20
     risks_identified:
       Model Skewing at llm-foundation-model-taid:
         severity: high
@@ -2288,21 +2323,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Poisoning:
     id: model-poisoning
     description: Embedding vulnerabilities directly into the model during training.
     impact: Compromises model integrity and security.
+    asvs: V3 - Model Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-model-integrity-cheat-sheet/
     action: Use secure training environments and data validation.
     mitigation: Regularly audit training data and processes.
     check: Implement adversarial testing and model validation.
     function: architecture
     stride: tampering
-    detection_logic: Monitor training processes for anomalies.
+    detection_logic: Monitor training processes for anomalies and use model validation tools.
     risk_assessment: High risk due to potential for compromised models.
     false_positives: Legitimate model updates.
     model_failure_possible_reason: false
@@ -2315,21 +2352,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Input Manipulation Attack:
     id: input-manipulation-attack
     description: Maliciously altering inputs to produce harmful or erroneous model outputs.
     impact: Produces harmful or incorrect outputs.
+    asvs: V5 - Input Validation and Sanitation Verification
+    cheat_sheet: https://owasp.org/www-project-input-validation-cheat-sheet/
     action: Implement input validation and sanitization.
     mitigation: Use context-aware filtering and anomaly detection.
     check: Regularly audit input handling processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor inputs for anomalies.
+    detection_logic: Monitor inputs for anomalies using real-time analysis tools.
     risk_assessment: High risk due to potential for harmful outputs.
     false_positives: Legitimate input variations.
     model_failure_possible_reason: false
@@ -2342,16 +2381,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
+        most_relevant_data_asset: 
+        most_relevant_technical_asset: llm-foundation-model-taid
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Transfer Learning Attack:
     id: transfer-learning-attack
     description: Exploiting vulnerabilities in pretrained models during fine-tuning.
     impact: Compromises model integrity and security.
+    asvs: V6 - Transfer Learning Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-transfer-learning-integrity-cheat-sheet/
     action: Use secure environments and validate pretrained models.
     mitigation: Regularly audit fine-tuning processes.
     check: Implement adversarial testing and model validation.
     function: architecture
     stride: tampering
-    detection_logic: Monitor fine-tuning processes for anomalies.
+    detection_logic: Monitor fine-tuning processes for anomalies using real-time monitoring tools.
     risk_assessment: High risk due to potential for compromised models.
     false_positives: Legitimate model updates.
     model_failure_possible_reason: false
@@ -2365,21 +2411,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Output Integrity Attack:
     id: output-integrity-attack
     description: Manipulating outputs to alter downstream applications or decisions.
     impact: Alters downstream applications or decisions.
+    asvs: V5 - Output Validation and Monitoring Verification
+    cheat_sheet: https://owasp.org/www-project-output-validation-cheat-sheet/
     action: Implement output validation and monitoring.
     mitigation: Use context-aware filtering and anomaly detection.
     check: Regularly audit output handling processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor outputs for anomalies.
+    detection_logic: Monitor outputs for anomalies using real-time analysis tools.
     risk_assessment: High risk due to potential for altered decisions.
     false_positives: Legitimate output variations.
     model_failure_possible_reason: false
@@ -2392,21 +2440,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Integrity Risks:
     id: model-integrity-risks
     description: Ensuring model security against unauthorized modifications, reverse engineering, and tampering.
     impact: Compromises model security and integrity.
+    asvs: V6 - Model Security and Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-model-security-integrity-cheat-sheet/
     action: Implement access controls and monitoring.
     mitigation: Use secure environments and regular audits.
     check: Conduct regular security assessments.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unauthorized modifications.
+    detection_logic: Monitor for unauthorized modifications using advanced security monitoring tools.
     risk_assessment: High risk due to potential for compromised models.
     false_positives: Legitimate model updates.
     model_failure_possible_reason: false
@@ -2420,11 +2470,11 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Testing and Validation:
     id: model-testing-validation
     description: Regular testing, including adversarial and red team testing, to ensure model behavior aligns with expectations and is free from security vulnerabilities.
@@ -2511,12 +2561,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: membership-inference-attack
     description: Determining whether specific data points were part of the training set.
     impact: Compromises data privacy and confidentiality.
-    action: Implement privacy-preserving training techniques.
-    mitigation: Use secure model architectures and data handling practices.
-    check: Regularly audit model behavior for privacy leaks.
+    asvs: V7 - Privacy Preservation Verification
+    cheat_sheet: https://owasp.org/www-project-privacy-preservation-cheat-sheet/
+    action: Implement privacy-preserving training techniques such as differential privacy and adversarial training.
+    mitigation: Use secure model architectures and data handling practices, including differential privacy.
+    check: Regularly audit model behavior for privacy leaks and conduct membership inference testing.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for attempts to infer training data membership.
+    detection_logic: Monitor for attempts to infer training data membership using anomaly detection tools.
     risk_assessment: High risk due to potential for data leakage.
     false_positives: Legitimate model queries.
     model_failure_possible_reason: false
@@ -2530,21 +2582,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_technical_assets:
           - llm-foundation-model-taid
           - llm-fine-tuned-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Theft:
     id: model-theft
     description: Gaining unauthorized access to model architecture, parameters, or algorithms.
     impact: Compromises intellectual property and security.
-    action: Implement access controls and encryption.
-    mitigation: Use secure environments and regular audits.
-    check: Conduct regular security assessments.
+    asvs: V5 - Intellectual Property Protection Verification
+    cheat_sheet: https://owasp.org/www-project-intellectual-property-protection-cheat-sheet/
+    action: Implement access controls and encryption for model artifacts.
+    mitigation: Use secure deployment environments and conduct regular audits.
+    check: Conduct regular security assessments of model access points.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unauthorized access attempts.
+    detection_logic: Monitor for unauthorized access attempts and unusual activities using intrusion detection systems.
     risk_assessment: High risk due to potential for intellectual property theft.
     false_positives: Legitimate access by authorized users.
     model_failure_possible_reason: false
@@ -2557,21 +2611,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Model Data Extraction:
     id: model-data-extraction
     description: Extraction of sensitive data or intellectual property from a trained model.
     impact: Compromises data privacy and intellectual property.
-    action: Implement data encryption and access controls.
-    mitigation: Use secure environments and regular audits.
-    check: Conduct regular security assessments.
+    asvs: V8 - Data Extraction Prevention Verification
+    cheat_sheet: https://owasp.org/www-project-data-extraction-prevention-cheat-sheet/
+    action: Implement data encryption and access controls for trained models.
+    mitigation: Use secure environments and conduct regular audits of model access.
+    check: Conduct regular security assessments and monitor for data extraction attempts.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for data extraction attempts.
+    detection_logic: Monitor for data extraction attempts using network monitoring tools.
     risk_assessment: High risk due to potential for data leakage.
     false_positives: Legitimate data access by authorized users.
     model_failure_possible_reason: false
@@ -2584,15 +2640,17 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Adversarial Attacks:
     id: adversarial-attacks
     description: Crafting inputs to mislead the model into harmful or incorrect outputs.
     impact: Produces harmful or incorrect outputs.
+    asvs: V3 - Adversarial Robustness Verification
+    cheat_sheet: https://owasp.org/www-project-adversarial-robustness-cheat-sheet/
     action: Implement adversarial training and input validation.
     mitigation: Use context-aware filtering and anomaly detection.
     check: Regularly audit input handling processes.
@@ -2611,21 +2669,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Adversarial Machine Learning:
     id: adversarial-machine-learning
     description: Address vulnerabilities in AI models exposed to adversarial inputs, ensuring defensive strategies are implemented across the system.
     impact: Compromises model performance and security.
+    asvs: V4 - Adversarial Resilience Verification
+    cheat_sheet: https://owasp.org/www-project-adversarial-robustness-cheat-sheet/
     action: Implement defensive strategies and secure deployment practices.
     mitigation: Use adversarial training and robust model architectures.
     check: Conduct regular adversarial testing and validation.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for adversarial input patterns.
+    detection_logic: Monitor for adversarial input patterns using anomaly detection systems.
     risk_assessment: High risk due to potential for exploitation.
     false_positives: Legitimate model queries.
     model_failure_possible_reason: false
@@ -2638,21 +2698,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Adversarial Reprogramming:
     id: adversarial-reprogramming
     description: Repurposing a model for unintended tasks through adversarial input manipulation.
     impact: Alters model functionality.
+    asvs: V9 - Model Repurposing Integrity Verification
+    cheat_sheet: https://owasp.org/www-project-model-repurposing-integrity-cheat-sheet/
     action: Implement input validation and monitoring.
     mitigation: Use context-aware filtering and anomaly detection.
     check: Regularly audit input handling processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor inputs for anomalies.
+    detection_logic: Monitor inputs for anomalies using real-time analysis tools.
     risk_assessment: High risk due to potential for altered functionality.
     false_positives: Legitimate input variations.
     model_failure_possible_reason: false
@@ -2665,21 +2727,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Meta Backdoors:
     id: meta-backdoors
     description: Forcing a model to generate outputs based on meta tasks, such as propaganda generation.
     impact: Produces unintended outputs.
+    asvs: V10 - Meta Backdoor Detection Verification
+    cheat_sheet: https://owasp.org/www-project-meta-backdoor-detection-cheat-sheet/
     action: Implement model validation and monitoring.
     mitigation: Use secure model architectures and regular audits.
     check: Conduct regular model testing and validation.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unexpected model outputs.
+    detection_logic: Monitor for unexpected model outputs using automated anomaly detection systems.
     risk_assessment: High risk due to potential for unintended outputs.
     false_positives: Legitimate model behavior variations.
     model_failure_possible_reason: false
@@ -2692,21 +2756,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Backdoor/Neural Trojan Attacks:
     id: backdoor-neural-trojan-attacks
     description: Embedding hidden malicious functionality into ML models, activated by specific inputs.
     impact: Compromises model integrity and security.
+    asvs: V11 - Neural Trojan Detection Verification
+    cheat_sheet: https://owasp.org/www-project-neural-trojan-detection-cheat-sheet/
     action: Implement model validation and monitoring.
     mitigation: Use secure model architectures and regular audits.
     check: Conduct regular model testing and validation.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unexpected model behavior.
+    detection_logic: Monitor for unexpected model behavior using comprehensive testing and anomaly detection tools.
     risk_assessment: High risk due to potential for malicious functionality.
     false_positives: Legitimate model behavior variations.
     model_failure_possible_reason: false
@@ -2719,21 +2785,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   AI Supply Chain Attacks:
     id: ai-supply-chain-attacks
     description: Compromising third-party ML components such as datasets, frameworks, or pretrained models.
     impact: Affects operational integrity.
+    asvs: V12 - Supply Chain Security Verification
+    cheat_sheet: https://owasp.org/www-project-supply-chain-security-cheat-sheet/
     action: Implement a thorough vetting process for third-party components.
     mitigation: Regular audits and updates of third-party dependencies.
     check: Conduct regular security assessments of third-party components.
     function: architecture
     stride: tampering
-    detection_logic: Monitor and verify the integrity of third-party components.
+    detection_logic: Monitor and verify the integrity of third-party components using automated supply chain security tools.
     risk_assessment: High risk due to potential for data breaches and system compromise.
     false_positives: Legitimate use of verified third-party components.
     model_failure_possible_reason: false
@@ -2755,12 +2823,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: pickle-file-attacks
     description: Attacks exploiting the unsafe deserialization of pickle files in ML model deployment.
     impact: Injects backdoors and compromises model security.
+    asvs: V13 - Secure Deserialization Verification
+    cheat_sheet: https://owasp.org/www-project-secure-deserialization-cheat-sheet/
     action: Avoid using pickle files for model serialization.
-    mitigation: Use secure serialization formats and regular audits.
+    mitigation: Use secure serialization formats like JSON or YAML and perform regular audits.
     check: Conduct regular security assessments of serialization processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unsafe deserialization practices.
+    detection_logic: Monitor for unsafe deserialization practices using static and dynamic analysis tools.
     risk_assessment: High risk due to potential for backdoor injection.
     false_positives: Legitimate use of secure serialization formats.
     model_failure_possible_reason: false
@@ -2773,21 +2843,24 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Regulatory Compliance:
     id: regulatory-compliance
     description: Ensuring adherence to relevant laws and regulations governing AI and data usage.
     impact: High risk due to potential for legal penalties.
+    asvs: V14 - Regulatory Compliance Verification
+    cheat_sheet: https://owasp.org/www-project-regulatory-compliance-verification-cheat-sheet/
     action: Implement compliance checks and audits.
     mitigation: Regularly update policies to reflect legal changes.
     check: Conduct periodic compliance audits.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for compliance violations.
+    detection_logic: Monitor for compliance violations using automated compliance monitoring tools.
+    risk_assessment: High risk due to potential for legal penalties.
     false_positives: Legitimate compliance activities.
     model_failure_possible_reason: false
     cwe: 200
@@ -2799,21 +2872,24 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Industry-Specific Standards:
     id: industry-specific-standards
     description: Adhering to standards specific to the industry, such as healthcare or finance.
     impact: High risk due to potential for industry-specific penalties.
+    asvs: V15 - Industry Standards Compliance Verification
+    cheat_sheet: https://owasp.org/www-project-industry-standards-compliance-cheat-sheet/
     action: Implement industry-specific compliance frameworks.
     mitigation: Regularly review and update compliance practices.
     check: Conduct industry-specific compliance audits.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for industry-specific compliance violations.
+    detection_logic: Monitor for industry-specific compliance violations using specialized compliance monitoring tools.
+    risk_assessment: High risk due to potential for industry-specific penalties.
     false_positives: Legitimate compliance activities.
     model_failure_possible_reason: false
     cwe: 200
@@ -2825,21 +2901,24 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Cross-Border Compliance Challenges for Privacy:
     id: cross-border-compliance
     description: Ensuring compliance with differing privacy laws when transferring data across jurisdictions.
     impact: High risk due to potential for legal penalties.
+    asvs: V16 - Cross-Border Privacy Compliance Verification
+    cheat_sheet: https://owasp.org/www-project-cross-border-privacy-compliance-cheat-sheet/
     action: Implement data transfer agreements and compliance checks.
     mitigation: Use data localization and anonymization techniques.
     check: Conduct regular audits of cross-border data transfers.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for cross-border compliance violations.
+    detection_logic: Monitor for cross-border compliance violations using automated compliance monitoring tools.
+    risk_assessment: High risk due to potential for legal penalties.
     false_positives: Legitimate cross-border data transfers.
     model_failure_possible_reason: false
     cwe: 200
@@ -2851,21 +2930,24 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Emerging AI Governance Frameworks:
     id: emerging-ai-governance
     description: Adapting to new governance frameworks for AI usage and deployment.
     impact: High risk due to potential for governance penalties.
+    asvs: V16 - Cross-Border Privacy Compliance Verification
+    cheat_sheet: https://owasp.org/www-project-cross-border-privacy-compliance-cheat-sheet/
     action: Implement governance frameworks and compliance checks.
     mitigation: Regularly update policies to reflect new governance standards.
     check: Conduct regular governance audits.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for governance compliance violations.
+    detection_logic: Monitor for governance compliance violations using automated compliance monitoring tools.
+    risk_assessment: High risk due to potential for governance penalties.
     false_positives: Legitimate governance activities.
     model_failure_possible_reason: false
     cwe: 200
@@ -2877,102 +2959,113 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - llm-foundation-model-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
-  Infrastructure Scalability Risks:
-    id: infrastructure-scalability-risks
-    description: Challenges in scaling infrastructure to meet demand.
-    impact: Performance degradation and service outages.
-    action: Implement load balancing and resource allocation strategies.
-    mitigation: Use cloud-based solutions for scalability.
-    check: Conduct regular scalability assessments.
-    function: architecture
-    stride: denial-of-service
-    detection_logic: Monitor for scalability issues.
-    risk_assessment: High risk due to potential for service disruption.
-    false_positives: Legitimate scaling activities.
-    model_failure_possible_reason: false
-    cwe: 400
-    risks_identified:
-      Infrastructure Scalability Risks at llm-foundation-model-taid:
-        severity: high
-        exploitation_likelihood: likely
-        exploitation_impact: high
-        data_breach_probability: possible
-        data_breach_technical_assets:
-          - llm-foundation-model-taid
-        most_relevant_data_asset:
-        most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
-  Monitoring and Observability Risks:
-    id: monitoring-observability-risks
-    description: Lack of visibility into system performance and issues.
-    impact: Delayed response to incidents and performance issues.
-    action: Implement observability tools and metrics.
-    mitigation: Use real-time monitoring solutions.
-    check: Conduct regular observability assessments.
-    function: operations
-    stride: information-disclosure
-    detection_logic: Monitor for observability gaps.
-    risk_assessment: High risk due to potential for delayed incident response.
-    false_positives: Legitimate monitoring activities.
-    model_failure_possible_reason: false
-    cwe: 200
-    risks_identified:
-      Monitoring and Observability Risks at llm-foundation-model-taid:
-        severity: high
-        exploitation_likelihood: likely
-        exploitation_impact: high
-        data_breach_probability: possible
-        data_breach_technical_assets:
-          - llm-foundation-model-taid
-        most_relevant_data_asset:
-        most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
-  Incident Response Procedures:
-    id: incident-response-procedures
-    description: Lack of structured response to incidents.
-    impact: Prolonged downtime and data loss.
-    action: Develop detailed incident response plans.
-    mitigation: Regularly update and test response procedures.
-    check: Conduct regular incident response drills.
-    function: operations
-    stride: denial-of-service
-    detection_logic: Monitor for incident response gaps.
-    risk_assessment: High risk due to potential for prolonged incidents.
-    false_positives: Legitimate incident response activities.
-    model_failure_possible_reason: false
-    cwe: 400
-    risks_identified:
-      Incident Response Procedures at llm-foundation-model-taid:
-        severity: high
-        exploitation_likelihood: likely
-        exploitation_impact: high
-        data_breach_probability: possible
-        data_breach_technical_assets:
-          - llm-foundation-model-taid
-        most_relevant_data_asset:
-        most_relevant_technical_asset: llm-foundation-model-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
+
+      Infrastructure Scalability Risks:
+        id: infrastructure-scalability-risks
+        description: Challenges in scaling infrastructure to meet demand.
+        impact: Performance degradation and service outages.
+        asvs: V17 - Infrastructure Scalability Verification
+        cheat_sheet: https://owasp.org/www-project-infrastructure-scalability-verification-cheat-sheet/
+        action: Implement load balancing and resource allocation strategies.
+        mitigation: Use cloud-based solutions for scalability.
+        check: Conduct regular scalability assessments.
+        function: architecture
+        stride: denial-of-service
+        detection_logic: Monitor for scalability issues using real-time monitoring and load testing tools.
+        risk_assessment: High risk due to potential for service disruption.
+        false_positives: Legitimate scaling activities.
+        model_failure_possible_reason: false
+        cwe: 400
+        risks_identified:
+          Infrastructure Scalability Risks at llm-foundation-model-taid:
+            severity: high
+            exploitation_likelihood: likely
+            exploitation_impact: high
+            data_breach_probability: possible
+            data_breach_technical_assets:
+              - llm-foundation-model-taid
+            most_relevant_data_asset: 
+            most_relevant_technical_asset: llm-foundation-model-taid
+            most_relevant_communication_link: 
+            most_relevant_trust_boundary: 
+            most_relevant_shared_runtime: 
+
+      Monitoring and Observability Risks:
+        id: monitoring-observability-risks
+        description: Lack of visibility into system performance and issues.
+        impact: Delayed response to incidents and performance issues.
+        asvs: V18 - Monitoring and Observability Verification
+        cheat_sheet: https://owasp.org/www-project-monitoring-observability-verification-cheat-sheet/
+        action: Implement observability tools and metrics.
+        mitigation: Use real-time monitoring solutions.
+        check: Conduct regular observability assessments.
+        function: operations
+        stride: information-disclosure
+        detection_logic: Monitor for observability gaps using comprehensive logging and alerting systems.
+        risk_assessment: High risk due to potential for delayed incident response.
+        false_positives: Legitimate monitoring activities.
+        model_failure_possible_reason: false
+        cwe: 200
+        risks_identified:
+          Monitoring and Observability Risks at llm-foundation-model-taid:
+            severity: high
+            exploitation_likelihood: likely
+            exploitation_impact: high
+            data_breach_probability: possible
+            data_breach_technical_assets:
+              - llm-foundation-model-taid
+            most_relevant_data_asset: 
+            most_relevant_technical_asset: llm-foundation-model-taid
+            most_relevant_communication_link: 
+            most_relevant_trust_boundary: 
+            most_relevant_shared_runtime: 
+
+      Incident Response Procedures:
+        id: incident-response-procedures
+        description: Lack of structured response to incidents.
+        impact: Prolonged downtime and data loss.
+        asvs: V19 - Incident Response Verification
+        cheat_sheet: https://owasp.org/www-project-incident-response-verification-cheat-sheet/
+        action: Develop detailed incident response plans.
+        mitigation: Regularly update and test response procedures.
+        check: Conduct regular incident response drills.
+        function: operations
+        stride: denial-of-service
+        detection_logic: Monitor for incident response gaps using incident tracking and management tools.
+        risk_assessment: High risk due to potential for prolonged incidents.
+        false_positives: Legitimate incident response activities.
+        model_failure_possible_reason: false
+        cwe: 400
+        risks_identified:
+          Incident Response Procedures at llm-foundation-model-taid:
+            severity: high
+            exploitation_likelihood: likely
+            exploitation_impact: high
+            data_breach_probability: possible
+            data_breach_technical_assets:
+              - llm-foundation-model-taid
+            most_relevant_data_asset: 
+            most_relevant_technical_asset: llm-foundation-model-taid
+            most_relevant_communication_link: 
+            most_relevant_trust_boundary: 
+            most_relevant_shared_runtime:
   Model Retirement Risks:
     id: model-retirement-risks
     description: Risks associated with decommissioning models.
     impact: Data loss and compliance issues.
+    asvs: V16 - Model Retirement Verification
+    cheat_sheet: https://owasp.org/www-project-model-retirement-verification-cheat-sheet/
     action: Develop model decommissioning and data archiving plans.
-    mitigation: Use secure data archiving solutions.
+    mitigation: Use secure data archiving solutions like encrypted storage and ensure data integrity through regular backups.
     check: Conduct regular retirement assessments.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for retirement process gaps.
+    detection_logic: Monitor for retirement process gaps using automated auditing tools and manual reviews.
     risk_assessment: High risk due to potential for data loss.
     false_positives: Legitimate retirement activities.
     model_failure_possible_reason: false
@@ -2994,12 +3087,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: cost-resource-management-risks
     description: Inefficient use of resources leading to increased costs.
     impact: Budget overruns and resource wastage.
+    asvs: V17 - Infrastructure Scalability Verification
+    cheat_sheet: https://owasp.org/www-project-infrastructure-scalability-verification-cheat-sheet/
     action: Implement budget management and resource optimization strategies.
     mitigation: Use cost monitoring tools.
     check: Conduct regular cost assessments.
     function: operations
     stride: denial-of-service
-    detection_logic: Monitor for cost inefficiencies.
+    detection_logic: Monitor for cost inefficiencies using real-time monitoring and load testing tools.
     risk_assessment: High risk due to potential for budget overruns.
     false_positives: Legitimate resource usage.
     model_failure_possible_reason: false
@@ -3021,12 +3116,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: training-expertise-risks
     description: Skill gaps and lack of training programs.
     impact: Reduced system performance and increased errors.
+    asvs: V18 - Training and Expertise Verification
+    cheat_sheet: https://owasp.org/www-project-training-and-expertise-verification-cheat-sheet/
     action: Develop training programs and skill assessments.
     mitigation: Use continuous learning platforms.
     check: Conduct regular training assessments.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for skill gaps.
+    detection_logic: Monitor for skill gaps using performance metrics and feedback systems.
     risk_assessment: High risk due to potential for performance issues.
     false_positives: Legitimate training activities.
     model_failure_possible_reason: false
@@ -3048,12 +3145,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: file-path-obfuscation-risks
     description: Risks associated with the obfuscation of file paths, which may leak information about directory hierarchy and have nonce collisions.
     impact: Potential exposure of directory structure and partial information leakage.
+    asvs: V19 - File Path Obfuscation Verification
+    cheat_sheet: https://owasp.org/www-project-file-path-obfuscation-verification-cheat-sheet/
     action: Implement stronger obfuscation techniques and review nonce usage.
     mitigation: Use more secure encryption methods and increase nonce length.
     check: Conduct regular security assessments of obfuscation methods.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for information leakage through obfuscation.
+    detection_logic: Monitor for information leakage through obfuscation using automated analysis tools and manual reviews.
     risk_assessment: Medium risk due to potential for partial information exposure.
     false_positives: Legitimate obfuscation activities.
     model_failure_possible_reason: false
@@ -3075,12 +3174,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: embedding-reversal-risks
     description: Risks associated with the potential reversal of embeddings, which could reveal information about indexed codebases.
     impact: Potential exposure of sensitive information from embeddings.
+    asvs: V20 - Embedding Reversal Verification
+    cheat_sheet: https://owasp.org/www-project-embedding-reversal-verification-cheat-sheet/
     action: Implement access controls and monitoring for the vector database.
     mitigation: Use secure storage and encryption for embeddings.
     check: Conduct regular security assessments of embedding security.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for attempts to reverse embeddings.
+    detection_logic: Monitor for attempts to reverse embeddings using anomaly detection systems and access logs.
     risk_assessment: High risk due to potential for sensitive information exposure.
     false_positives: Legitimate embedding activities.
     model_failure_possible_reason: false
@@ -3102,12 +3203,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: git-repo-indexing-risks
     description: Risks associated with indexing Git history, including commit SHAs and obfuscated file names.
     impact: Potential exposure of commit history and file structure.
+    asvs: V21 - Git Repo Indexing Verification
+    cheat_sheet: https://owasp.org/www-project-git-repo-indexing-verification-cheat-sheet/
     action: Implement access controls and secure key management for obfuscation.
     mitigation: Use secure methods for deriving obfuscation keys.
     check: Conduct regular security assessments of Git indexing processes.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for unauthorized access to Git indexing data.
+    detection_logic: Monitor for unauthorized access to Git indexing data using intrusion detection systems and access logs.
     risk_assessment: Medium risk due to potential for partial information exposure.
     false_positives: Legitimate Git indexing activities.
     model_failure_possible_reason: false
@@ -3129,12 +3232,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: intellectual-property-risks
     description: Risks of exposing IP information in prompts and outputs.
     impact: Compromises intellectual property and confidentiality.
+    asvs: V22 - Intellectual Property Protection Verification
+    cheat_sheet: https://owasp.org/www-project-intellectual-property-protection-cheat-sheet/
     action: Implement checks for IP information in prompts.
-    mitigation: Use secure handling and validation of prompts.
+    mitigation: Use secure handling and validation of prompts, including input sanitization and output filtering to prevent IP exposure.
     check: Conduct regular audits for IP exposure.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for IP information in prompts.
+    detection_logic: Monitor for IP information in prompts using automated scanning tools and manual reviews.
     risk_assessment: High risk due to potential for IP exposure.
     false_positives: Legitimate prompt content.
     model_failure_possible_reason: false
@@ -3147,21 +3252,23 @@ individual_risk_categories: # used for adding custom manually identified risks
         data_breach_probability: possible
         data_breach_technical_assets:
           - context-generator-taid
-        most_relevant_data_asset:
+        most_relevant_data_asset: 
         most_relevant_technical_asset: context-generator-taid
-        most_relevant_communication_link:
-        most_relevant_trust_boundary:
-        most_relevant_shared_runtime:
+        most_relevant_communication_link: 
+        most_relevant_trust_boundary: 
+        most_relevant_shared_runtime: 
   Privacy Risks:
     id: privacy-risks
     description: Risks of reidentification and personal information exposure in prompts.
     impact: Compromises user privacy and data protection.
+    asvs: V23 - Privacy Controls Verification
+    cheat_sheet: https://owasp.org/www-project-privacy-controls-verification-cheat-sheet/
     action: Implement privacy-preserving techniques and validation.
     mitigation: Use secure handling and anonymization of data.
     check: Conduct regular audits for privacy compliance.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for personal information in prompts.
+    detection_logic: Monitor for personal information in prompts using data loss prevention (DLP) tools and manual reviews.
     risk_assessment: High risk due to potential for privacy breaches.
     false_positives: Legitimate prompt content.
     model_failure_possible_reason: false
@@ -3184,12 +3291,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: robustness-risks
     description: Risks of prompt leaking and evasion attacks.
     impact: Compromises model robustness and security.
+    asvs: V24 - Robustness Verification
+    cheat_sheet: https://owasp.org/www-project-robustness-verification-cheat-sheet/
     action: Implement robustness testing and monitoring.
     mitigation: Use secure handling and validation of prompts.
     check: Conduct regular robustness assessments.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for robustness issues.
+    detection_logic: Monitor for robustness issues using automated analysis tools and manual reviews.
     risk_assessment: High risk due to potential for robustness failures.
     false_positives: Legitimate prompt content.
     model_failure_possible_reason: false
@@ -3211,12 +3320,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: data-labeling-quality-risks
     description: Risks associated with poorly labeled data leading to inaccurate model predictions.
     impact: Compromises model accuracy and reliability.
+    asvs: V25 - Data Labeling Quality Verification
+    cheat_sheet: https://owasp.org/www-project-data-labeling-quality-verification-cheat-sheet/
     action: Implement quality control measures for data labeling.
     mitigation: Use multiple annotators and validation processes.
     check: Conduct regular audits of labeled data quality.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for inconsistencies in labeled data.
+    detection_logic: Monitor for inconsistencies in labeled data using automated analysis tools and manual reviews.
     risk_assessment: High risk due to potential for inaccurate outputs.
     false_positives: Legitimate variations in data labeling.
     model_failure_possible_reason: false
@@ -3239,12 +3350,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: data-labeling-scalability-risks
     description: Challenges in scaling data labeling processes for large datasets.
     impact: Increased costs and delays in model training.
+    asvs: V26 - Data Labeling Scalability Verification
+    cheat_sheet: https://owasp.org/www-project-data-labeling-scalability-verification-cheat-sheet/
     action: Implement automated data labeling tools.
     mitigation: Use a combination of human and automated labeling.
     check: Conduct regular assessments of labeling efficiency.
     function: operations
     stride: denial-of-service
-    detection_logic: Monitor for bottlenecks in the labeling process.
+    detection_logic: Monitor for bottlenecks in the labeling process using automated analysis tools and manual reviews.
     risk_assessment: Medium risk due to potential for delays.
     false_positives: Legitimate scaling activities.
     model_failure_possible_reason: false
@@ -3266,12 +3379,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: subjectivity-bias-labeling
     description: Risks of subjective labeling leading to biased models.
     impact: Compromises fairness and accuracy of model outputs.
+    asvs: V27 - Subjectivity and Bias in Labeling Verification
+    cheat_sheet: https://owasp.org/www-project-subjectivity-and-bias-in-labeling-verification-cheat-sheet/
     action: Implement clear labeling guidelines and training for annotators.
     mitigation: Regularly review labeled data for bias.
     check: Conduct audits for bias in labeled datasets.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for patterns of bias in model outputs.
+    detection_logic: Monitor for bias in labeled data using automated analysis tools and manual reviews.
     risk_assessment: High risk due to potential for biased outputs.
     false_positives: Legitimate variations in data labeling.
     model_failure_possible_reason: false
@@ -3294,12 +3409,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: data-labeling-quality-control-risks
     description: Lack of quality control in data labeling processes.
     impact: Poor model performance due to inaccurate labels.
+    asvs: V25 - Data Labeling Quality Verification
+    cheat_sheet: https://owasp.org/www-project-data-labeling-quality-control-verification-cheat-sheet/
     action: Implement double-checking and validation processes.
     mitigation: Use expert verification for critical labeling tasks.
     check: Conduct regular quality audits of labeled data.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for inconsistencies in labeled data.
+    detection_logic: Monitor for inconsistencies in labeled data using automated analysis tools and manual reviews.
     risk_assessment: High risk due to potential for inaccurate outputs.
     false_positives: Legitimate variations in data labeling.
     model_failure_possible_reason: false
@@ -3321,12 +3438,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     id: over-reliance-automation-labeling
     description: Risks associated with relying too heavily on automated data labeling tools.
     impact: Potential for errors and lack of oversight.
+    asvs: V26 - Data Labeling Scalability Verification
+    cheat_sheet: https://owasp.org/www-project-over-reliance-on-automation-in-data-labeling-verification-cheat-sheet/
     action: Implement human oversight in the labeling process.
     mitigation: Regularly review automated labeling outputs.
     check: Conduct audits of automated labeling processes.
     function: operations
     stride: information-disclosure
-    detection_logic: Monitor for discrepancies between automated and manual labeling.
+    detection_logic: Monitor for bottlenecks in the labeling process using automated analysis tools and manual reviews.
     risk_assessment: Medium risk due to potential for errors.
     false_positives: Legitimate automated labeling activities.
     model_failure_possible_reason: false
@@ -3352,14 +3471,14 @@ individual_risk_categories: # used for adding custom manually identified risks
       potentially leading to incorrect outputs or system failures.
       https://www.knostic.ai/blog/introducing-a-new-class-of-ai-attacks-flowbreaking
     impact: Compromises the integrity and reliability of AI outputs, leading to operational disruptions.
-    asvs: 
-    cheat_sheet: 
+    asvs: V27 - Flowbreaking Attacks Verification
+    cheat_sheet: https://owasp.org/www-project-flowbreaking-attacks-verification-cheat-sheet/
     action: Implement monitoring and anomaly detection systems to identify flow disruptions.
     mitigation: Use robust input validation and context management to maintain flow integrity.
     check: Conduct regular assessments of system flow and decision-making processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unusual patterns in input and output flows.
+    detection_logic: Monitor for unusual patterns in input and output flows using anomaly detection systems and flow analysis tools.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate variations in data flow.
     model_failure_possible_reason: false
@@ -3410,12 +3529,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Improper handling of prompts and model outputs may reveal confidential data such as API keys, sensitive files, or user-specific information.
     impact: High risk of exposing sensitive data.
+    asvs: V28 - Sensitive Information Disclosure Verification
+    cheat_sheet: https://owasp.org/www-project-sensitive-information-disclosure-verification-cheat-sheet/
     action: Implement strict output validation and sanitization.
-    mitigation: Use encryption for sensitive outputs.
+    mitigation: Use encryption for sensitive outputs to ensure data confidentiality and integrity.
     check: Conduct regular audits of output handling processes.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for sensitive data in outputs.
+    detection_logic: Monitor for sensitive data in outputs using data masking tools and automated scanning.
     risk_assessment: High risk due to potential for data breaches.
     false_positives: Legitimate outputs containing sensitive data.
     model_failure_possible_reason: false
@@ -3466,12 +3587,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Attackers can manipulate training data or fine-tuning processes to introduce biases or malicious behaviors into the model.
     impact: High risk of compromised model integrity and performance.
+    asvs: V29 - Data and Model Poisoning Verification
+    cheat_sheet: https://owasp.org/www-project-data-model-poisoning-verification-cheat-sheet/
     action: Implement data validation and monitoring processes.
     mitigation: Regularly audit training data for integrity.
     check: Conduct assessments of model training processes.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for anomalies in training data.
+    detection_logic: Monitor for anomalies in training data using statistical analysis and anomaly detection tools.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate updates to training data.
     model_failure_possible_reason: false
@@ -3494,12 +3617,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Failures to validate or sanitize outputs can result in the generation of harmful, biased, or misleading information.
     impact: High risk of generating harmful outputs.
+    asvs: V30 - Improper Output Handling Verification
+    cheat_sheet: https://owasp.org/www-project-improper-output-handling-verification-cheat-sheet/
     action: Implement strict output validation and sanitization.
     mitigation: Use context-aware filtering for outputs.
     check: Conduct regular audits of output handling processes.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for harmful outputs.
+    detection_logic: Monitor for harmful outputs using content filtering and automated scanning tools.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate outputs.
     model_failure_possible_reason: false
@@ -3522,12 +3647,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Granting LLMs overly broad permissions or control may result in unintended actions or access, exacerbated by autonomous agent capabilities.
     impact: High risk of unauthorized actions and data exposure.
+    asvs: V31 - Excessive Agency Verification
+    cheat_sheet: https://owasp.org/www-project-excessive-agency-verification-cheat-sheet/
     action: Implement strict access controls and permissions.
     mitigation: Regularly review and audit permissions granted to LLMs.
     check: Conduct assessments of LLM capabilities and permissions.
     function: architecture
     stride: tampering
-    detection_logic: Monitor for unauthorized actions by LLMs.
+    detection_logic: Monitor for unauthorized actions by LLMs using activity monitoring and anomaly detection systems.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate LLM actions.
     model_failure_possible_reason: false
@@ -3546,16 +3673,18 @@ individual_risk_categories: # used for adding custom manually identified risks
         most_relevant_trust_boundary:
         most_relevant_shared_runtime:
   LLM System Prompt Leakage:
-    id: owasp-top10-llm-2025-system-prompt-leakage
+    id: owasp-top0-llm-2025-system-prompt-leakage
     description: >
       Malicious users may exploit vulnerabilities to extract embedded system prompts, revealing sensitive operational instructions or logic.
     impact: High risk of exposing sensitive operational details.
+    asvs: V32 - System Prompt Leakage Verification
+    cheat_sheet: https://owasp.org/www-project-system-prompt-leakage-verification-cheat-sheet/
     action: Implement strict access controls and monitoring for system prompts.
     mitigation: Regularly audit access to system prompts.
     check: Conduct assessments of prompt handling processes.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for unauthorized access to system prompts.
+    detection_logic: Monitor for unauthorized access to system prompts using access logs and intrusion detection systems.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate access to prompts.
     model_failure_possible_reason: false
@@ -3578,12 +3707,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Flaws in vector search or embedding mechanisms, especially in Retrieval-Augmented Generation (RAG), can lead to exploits or inaccurate outputs.
     impact: High risk of incorrect outputs and data exposure.
+    asvs: V33 - Vector and Embedding Weaknesses Verification
+    cheat_sheet: https://owasp.org/www-project-vector-embedding-weaknesses-verification-cheat-sheet/
     action: Implement robust validation and security measures for embeddings.
     mitigation: Regularly audit vector and embedding mechanisms.
     check: Conduct assessments of vector database security.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for vulnerabilities in vector mechanisms.
+    detection_logic: Monitor for vulnerabilities in vector mechanisms using regular security audits and penetration testing.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate vector operations.
     model_failure_possible_reason: false
@@ -3606,12 +3737,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Models generating and disseminating false or misleading content can erode trust, harm reputations, or misguide critical decisions.
     impact: High risk of reputational damage and misinformation spread.
+    asvs: V34 - Misinformation Verification
+    cheat_sheet: https://owasp.org/www-project-misinformation-verification-cheat-sheet/
     action: Implement validation and fact-checking mechanisms for outputs.
     mitigation: Regularly review model outputs for accuracy.
     check: Conduct assessments of output reliability.
     function: architecture
     stride: information-disclosure
-    detection_logic: Monitor for patterns of misinformation in outputs.
+    detection_logic: Monitor for patterns of misinformation in outputs using automated fact-checking tools and manual reviews.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate outputs.
     model_failure_possible_reason: false
@@ -3634,12 +3767,14 @@ individual_risk_categories: # used for adding custom manually identified risks
     description: >
       Risks related to resource overuse, denial-of-service conditions, or unexpected operational costs due to unregulated model interactions.
     impact: High risk of service disruption and increased costs.
+    asvs: V35 - Unbounded Consumption Verification
+    cheat_sheet: https://owasp.org/www-project-unbounded-consumption-verification-cheat-sheet/
     action: Implement rate limiting and resource allocation strategies.
     mitigation: Regularly monitor resource usage and costs.
     check: Conduct assessments of resource consumption patterns.
     function: architecture
     stride: denial-of-service
-    detection_logic: Monitor for unusual resource consumption.
+    detection_logic: Monitor for unusual resource consumption using real-time monitoring tools and automated alerts.
     risk_assessment: High risk due to potential for significant operational impact.
     false_positives: Legitimate resource usage.
     model_failure_possible_reason: false
